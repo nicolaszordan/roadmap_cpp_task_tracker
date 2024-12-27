@@ -11,6 +11,8 @@ set(CMAKE_CXX_FLAGS "-Wall")
 
 set(SOURCES
     src/task_tracker.cpp
+    src/commands.cpp
+    src/commands/echo.cpp
 )
 
 add_executable(task_tracker ${SOURCES} src/main.cpp)
