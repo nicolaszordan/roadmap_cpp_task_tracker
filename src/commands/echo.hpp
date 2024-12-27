@@ -16,6 +16,9 @@ public:
 
     auto        name() const -> std::string_view override;
     static auto get_name() -> std::string_view;
+
+    auto        usage() const -> std::string_view override;
+    static auto get_usage() -> std::string_view;
 };
 
 } // namespace cmds

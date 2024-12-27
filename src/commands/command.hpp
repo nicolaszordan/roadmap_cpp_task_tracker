@@ -21,6 +21,9 @@ public:
 
     // Provide a name for the command.
     virtual auto    name() const -> std::string_view = 0;
+
+    // Provide a usage message for the command.
+    virtual auto    usage() const -> std::string_view = 0;
 };
     
 } // namespace cmds

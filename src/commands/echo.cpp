@@ -41,4 +41,14 @@ auto Echo::get_name() -> std::string_view
     return "echo";
 }
 
+auto Echo::usage() const -> std::string_view
+{
+    return Echo::get_usage();
+}
+
+auto Echo::get_usage() -> std::string_view
+{
+    return "echo [args..]";
+}
+
 } // namespace cmds

@@ -14,7 +14,7 @@ auto cmds::command_type_from_string(std::string_view str) -> std::optional<Comma
 auto cmds::print_command_types() -> void
 {
     std::println("Commands:");
-    std::println("  echo [args..] - Prints the arguments to the screen.");
+    std::println("  {} - {}", Echo::get_name(), Echo::get_description());
 }
 
 #include <catch2/catch_test_macros.hpp>
