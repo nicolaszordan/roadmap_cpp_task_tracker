@@ -16,7 +16,7 @@ public:
 public:
     auto    add_task(std::string_view description) -> TaskID;
     auto    get_task(TaskID id) const -> std::optional<std::reference_wrapper<const Task>>;
-    auto    update_task(TaskID id, std::string_view description) -> std::optional<std::reference_wrapper<const Task>>;
+    auto    update_task(TaskID id, const TaskUpdate& update) -> std::optional<std::reference_wrapper<const Task>>;
     auto    delete_task(TaskID id) -> void;
 
     auto    get_tasks_map() const -> const std::unordered_map<TaskID, Task>&;

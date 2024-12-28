@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <optional>
 
 using TaskID = std::uint64_t;
 
@@ -18,3 +19,10 @@ struct Task {
     // TODO:        created_at
     // TODO:        updated_at
 };
+
+// use this struct to update a task
+struct TaskUpdate {
+    std::optional<std::string>  description = {};
+    std::optional<TaskStatus>   status = {};
+};
+

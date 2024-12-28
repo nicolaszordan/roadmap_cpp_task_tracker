@@ -24,7 +24,7 @@ auto TaskStorage::get_task(TaskID id) const -> std::optional<std::reference_wrap
     return it->second;
 }
 
-auto TaskStorage::update_task(TaskID id, std::string_view description) -> std::optional<std::reference_wrapper<const Task>>
+auto TaskStorage::update_task(TaskID id, const TaskUpdate& update) -> std::optional<std::reference_wrapper<const Task>>
 {
     auto it = tasks.find(id);
 
@@ -32,7 +32,13 @@ auto TaskStorage::update_task(TaskID id, std::string_view description) -> std::o
         return std::nullopt;
     }
 
-    it->second.description = std::string{description};
+    if (update.description) {
+        it->second.description = *update.description;
+    }
+
+    if (update.status) {
+        it->second.status = *update.status;
+    }
 
     return it->second;
 }
@@ -139,17 +145,23 @@ TEST_CASE("TaskStorage can delete a task", "[task_storage]")
     REQUIRE(!result);
 }
 
-TEST_CASE("TaskStorage can update a task", "[task_storage]")
+TEST_CASE("TaskStorage can update a task's field independently", "[task_storage]")
 {
     TaskStorage task_storage;
 
     auto task_id = task_storage.add_task("Test task");
 
-    auto result = task_storage.update_task(task_id, "Updated task");
+    auto result = task_storage.update_task(task_id, TaskUpdate{ description: "Updated task" });
 
     REQUIRE(result);
     REQUIRE(result->get().description == "Updated task");
     REQUIRE(result->get().status == TaskStatus::Todo);
+
+    result = task_storage.update_task(task_id, TaskUpdate{ status: TaskStatus::Done });
+
+    REQUIRE(result);
+    REQUIRE(result->get().description == "Updated task");
+    REQUIRE(result->get().status == TaskStatus::Done);
 }
 
 } // namespace tests
