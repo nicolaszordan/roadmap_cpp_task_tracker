@@ -21,8 +21,27 @@ public:
 
     auto    get_tasks_map() const -> const std::unordered_map<TaskID, Task>&;
 
+    // views
     auto    view_all_tasks() const -> auto {
         return tasks | std::views::values;
+    }
+
+    auto    view_all_tasks_todo() -> auto {
+        return tasks | std::views::values | std::views::filter([](const Task& task) {
+            return task.status == TaskStatus::Todo;
+        });
+    }
+
+    auto    view_all_tasks_in_progress() -> auto {
+        return tasks | std::views::values | std::views::filter([](const Task& task) {
+            return task.status == TaskStatus::InProgress;
+        });
+    }
+
+    auto    view_all_tasks_done() -> auto {
+        return tasks | std::views::values | std::views::filter([](const Task& task) {
+            return task.status == TaskStatus::Done;
+        });
     }
 
 private:
