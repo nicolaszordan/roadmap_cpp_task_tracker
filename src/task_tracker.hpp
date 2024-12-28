@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 
+#include "task_storage.hpp"
 #include "commands/command.hpp"
 
 class TaskTracker {
@@ -13,4 +14,7 @@ public:
 
 private:
     auto        create_command(std::string_view command_name) -> std::unique_ptr<cmds::Command>;
+
+private:
+    TaskStorage task_storage;
 };
