@@ -46,6 +46,9 @@ auto TaskTracker::create_command(std::string_view command_name) -> std::unique_p
     switch (*command_type) {
     case cmds::CommandType::Echo:
         return std::make_unique<cmds::Echo>();
+
+    case cmds::CommandType::ListTasks:
+        return std::make_unique<cmds::ListTasks>(task_storage);
     
     default:
         return nullptr;
