@@ -3,15 +3,22 @@
 #include <vector>
 #include <string>
 #include <string_view>
+#include <expected>
 
 namespace cmds {
+
+enum class CommandError {
+    UnknownCommand,
+    InvalidArguments,
+    InvalidTaskID,
+};
 
 class Command {
 public:
     virtual         ~Command() = default;
 
     // Run the command with the given arguments.
-    virtual auto    run(const std::vector<std::string>& args) -> void = 0;
+    virtual auto    run(const std::vector<std::string>& args) -> std::expected<void, CommandError> = 0;
 
     // Provide a help message for the command.
     virtual auto    help() const -> std::string_view = 0;

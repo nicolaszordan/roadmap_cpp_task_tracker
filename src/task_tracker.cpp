@@ -24,7 +24,16 @@ auto TaskTracker::batch_mode(const std::vector<std::string>& args) -> void
         return;
     }
 
-    command->run(args);
+    auto run_result = command->run(args);
+    
+    if (run_result.error() == cmds::CommandError::InvalidArguments) {
+        std::println("Invalid arguments for command: {}", command_name);
+        std::println("Usage: {}", command->usage());
+        return;
+    } else if (!run_result) {
+        std::println("Error running command: {}", run_result.error());
+        return;
+    }
 }
 
 auto TaskTracker::create_command(std::string_view command_name) -> std::unique_ptr<cmds::Command>

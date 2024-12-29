@@ -4,7 +4,7 @@
 
 namespace cmds {
 
-auto Echo::run(const std::vector<std::string>& args) -> void
+auto Echo::run(const std::vector<std::string>& args) -> std::expected<void, CommandError>
 {
     for (const auto& arg : args) {
         std::println("{}", arg);
