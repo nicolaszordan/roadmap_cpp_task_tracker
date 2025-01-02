@@ -1,12 +1,70 @@
 #include "task_tracker.hpp"
 
 #include <print>
+#include <iostream>
+#include <string>
 
 #include "commands.hpp"
 
+namespace {
+
+auto prompt_user() -> std::string
+{
+    std::string input_buffer;
+    std::print("> ");
+    std::getline(std::cin >> std::ws, input_buffer);
+    return input_buffer;
+}
+
+auto should_quit(std::string_view input) -> bool
+{
+    return std::cin.eof() || input == "exit" || input == "quit";
+}
+
+auto quoted_split(std::string_view str, char delimiter) -> std::vector<std::string>
+{
+    std::vector<std::string> result;
+
+    while (!str.empty()) {
+        if (str.front() == '"') {
+            // Skip the opening quote
+            str.remove_prefix(1);
+            auto pos = str.find('"');
+            result.push_back(std::string{str.substr(0, pos)});
+            // Fastforward to the end of the word and quote
+            str.remove_prefix(pos + 1);
+
+        } else if (str.front() == delimiter) {
+            // Skip the delimiter
+            str.remove_prefix(1);
+
+        } else {
+            auto pos = str.find(delimiter); // should also check for quotes
+            result.push_back(std::string{str.substr(0, pos)});
+            str.remove_prefix(pos != str.npos ? pos + 1 : str.size());
+        }
+    }
+
+    return result;
+}
+
+} // anonymous namespace
+
 auto TaskTracker::interactive_mode() -> void
 {
-    std::println("Interactive mode not yet implemented.");
+    for (
+        auto input_buffer = prompt_user();
+        !should_quit(input_buffer);
+        input_buffer = prompt_user()
+    ) {
+        if (input_buffer.empty()) {
+            continue;
+        }
+
+        auto args = quoted_split(input_buffer, ' ');
+
+        batch_mode(args);
+    }
 }
 
 auto TaskTracker::batch_mode(const std::vector<std::string>& args) -> void
@@ -36,6 +94,7 @@ auto TaskTracker::batch_mode(const std::vector<std::string>& args) -> void
     }
 }
 
+// NOTE: this could return a variant instead of a unique_ptr to avoid an allocation
 auto TaskTracker::create_command(std::string_view command_name) -> std::unique_ptr<cmds::Command>
 {
     auto command_type = cmds::command_type_from_string(command_name);
@@ -54,3 +113,47 @@ auto TaskTracker::create_command(std::string_view command_name) -> std::unique_p
         return nullptr;
     }
 }
+
+
+#include <catch2/catch_test_macros.hpp>
+namespace tests {
+
+TEST_CASE("quoted_split can split strings into words", "[quoted_split]")
+{
+    auto result = quoted_split("echo \"Hello, World!\"", ' ');
+
+    REQUIRE(result.size() == 2);
+    REQUIRE(result[0] == "echo");
+    REQUIRE(result[1] == "Hello, World!");
+}
+
+TEST_CASE("quoted_split can split strings into words with multiple spaces", "[quoted_split]")
+{
+    auto result = quoted_split("echo   \"Hello, World!\"", ' ');
+
+    REQUIRE(result.size() == 2);
+    REQUIRE(result[0] == "echo");
+    REQUIRE(result[1] == "Hello, World!");
+}
+
+TEST_CASE("quoted_split can split strings into words with multiple quoted strings", "[quoted_split]")
+{
+    auto result = quoted_split("echo \"Hello, World!\" \"Goodbye, World!\"", ' ');
+
+    REQUIRE(result.size() == 3);
+    REQUIRE(result[0] == "echo");
+    REQUIRE(result[1] == "Hello, World!");
+    REQUIRE(result[2] == "Goodbye, World!");
+}
+
+TEST_CASE("quoted_split can split strings into words with multiple quoted strings and spaces", "[quoted_split]")
+{
+    auto result = quoted_split("echo   \"Hello, World!\"   \"Goodbye, World!\"", ' ');
+
+    REQUIRE(result.size() == 3);
+    REQUIRE(result[0] == "echo");
+    REQUIRE(result[1] == "Hello, World!");
+    REQUIRE(result[2] == "Goodbye, World!");
+}
+
+} // namespace tests
