@@ -2,6 +2,8 @@
 
 #include <print>
 
+#include "../task_storage.hpp"
+
 namespace cmds {
 
 ListTasks::ListTasks(TaskStorage& task_storage)
@@ -34,6 +36,8 @@ auto ListTasks::run(const std::vector<std::string>& args) -> std::expected<void,
     } else {
         return std::unexpected(CommandError::InvalidArguments);
     }
+
+    return {};
 }
 
 auto ListTasks::help() const -> std::string_view

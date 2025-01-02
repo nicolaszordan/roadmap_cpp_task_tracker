@@ -6,9 +6,9 @@ class TaskStorage;
 
 namespace cmds {
 
-class ListTasks : public Command {
+class MarkTaskInProgress : public Command {
 public:
-                ListTasks(TaskStorage& task_storage);
+                MarkTaskInProgress(TaskStorage& task_storage);
 
     auto        run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
 

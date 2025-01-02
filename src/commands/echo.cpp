@@ -9,6 +9,8 @@ auto Echo::run(const std::vector<std::string>& args) -> std::expected<void, Comm
     for (const auto& arg : args) {
         std::println("{}", arg);
     }
+
+    return {};
 }
 
 auto Echo::help() const -> std::string_view

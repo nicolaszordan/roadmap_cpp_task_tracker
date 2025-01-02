@@ -15,6 +15,11 @@ set(SOURCES
     src/commands.cpp
     src/commands/echo.cpp
     src/commands/list_tasks.cpp
+    src/commands/add_task.cpp
+    src/commands/delete_task.cpp
+    src/commands/mark_task_done.cpp
+    src/commands/mark_task_in_progress.cpp
+    src/commands/update_task.cpp
 )
 
 add_executable(task_tracker ${SOURCES} src/main.cpp)

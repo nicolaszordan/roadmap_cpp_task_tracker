@@ -108,6 +108,21 @@ auto TaskTracker::create_command(std::string_view command_name) -> std::unique_p
 
     case cmds::CommandType::ListTasks:
         return std::make_unique<cmds::ListTasks>(task_storage);
+
+    case cmds::CommandType::AddTask:
+        return std::make_unique<cmds::AddTask>(task_storage);
+
+    case cmds::CommandType::DeleteTask:
+        return std::make_unique<cmds::DeleteTask>(task_storage);
+
+    case cmds::CommandType::UpdateTask:
+        return std::make_unique<cmds::UpdateTask>(task_storage);
+
+    case cmds::CommandType::MarkTaskDone:
+        return std::make_unique<cmds::MarkTaskDone>(task_storage);
+
+    case cmds::CommandType::MarkTaskInProgress:
+        return std::make_unique<cmds::MarkTaskInProgress>(task_storage);
     
     default:
         return nullptr;
