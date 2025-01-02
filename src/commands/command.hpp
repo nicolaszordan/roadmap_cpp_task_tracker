@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 #include <expected>
+#include <format>
 
 namespace cmds {
 
@@ -34,3 +35,28 @@ public:
 };
     
 } // namespace cmds
+
+template<>
+struct std::formatter<cmds::CommandError, char>
+{
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext&& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template<typename FormatContext>
+    auto format(const cmds::CommandError& error, FormatContext& ctx) const
+    {
+        switch (error) {
+        case cmds::CommandError::UnknownCommand:
+            return std::format_to(ctx.out(), "UnknownCommand");
+        case cmds::CommandError::InvalidArguments:
+            return std::format_to(ctx.out(), "InvalidArguments");
+        case cmds::CommandError::InvalidTaskID:
+            return std::format_to(ctx.out(), "InvalidTaskID");
+        default:
+            return std::format_to(ctx.out(), "UnknownError");
+        }
+    }
+};
