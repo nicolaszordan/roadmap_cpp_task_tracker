@@ -35,6 +35,8 @@ auto cmds::print_command_types() -> void
     std::println("  {} - {}", UpdateTask::get_name(), UpdateTask::get_description());
 }
 
+#ifdef UNIT_TESTS
+
 #include <catch2/catch_test_macros.hpp>
 namespace tests {
 
@@ -97,3 +99,5 @@ TEST_CASE("command_type_from_string returns the correct command type", "[command
 }
 
 } // namespace tests
+
+#endif // UNIT_TESTS

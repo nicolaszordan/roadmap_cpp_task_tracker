@@ -30,6 +30,8 @@ add_executable(task_tracker_tests ${SOURCES})
 
 target_link_libraries(task_tracker_tests PRIVATE Catch2::Catch2WithMain)
 
+target_compile_definitions(task_tracker_tests PRIVATE UNIT_TESTS)
+
 include(CTest)
 include(Catch)
 catch_discover_tests(task_tracker_tests)

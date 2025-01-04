@@ -130,6 +130,8 @@ auto TaskTracker::create_command(std::string_view command_name) -> std::unique_p
 }
 
 
+#ifdef UNIT_TESTS
+
 #include <catch2/catch_test_macros.hpp>
 namespace tests {
 
@@ -172,3 +174,5 @@ TEST_CASE("quoted_split can split strings into words with multiple quoted string
 }
 
 } // namespace tests
+
+#endif // UNIT_TESTS

@@ -53,6 +53,8 @@ auto TaskStorage::get_tasks_map() const -> const std::unordered_map<TaskID, Task
     return tasks;
 }
 
+#ifdef UNIT_TESTS
+
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 #include <algorithm>
@@ -255,3 +257,5 @@ TEST_CASE("TaskStorage can provide a view with all tasks in the Done status", "[
 }
 
 } // namespace tests
+
+#endif // UNIT_TESTS
