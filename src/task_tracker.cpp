@@ -50,6 +50,11 @@ auto quoted_split(std::string_view str, char delimiter) -> std::vector<std::stri
 
 } // anonymous namespace
 
+TaskTracker::TaskTracker(std::optional<std::filesystem::path> file_storage)
+    : task_storage{ file_storage }
+{
+}
+
 auto TaskTracker::interactive_mode() -> void
 {
     for (
@@ -92,6 +97,8 @@ auto TaskTracker::batch_mode(const std::vector<std::string>& args) -> void
         std::println("Error running command: {}", run_result.error());
         return;
     }
+
+    task_storage.save_tasks();
 }
 
 // NOTE: this could return a variant instead of a unique_ptr to avoid an allocation

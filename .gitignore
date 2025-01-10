@@ -1,3 +1,10 @@
+# vscode
+.vscode
+
+# Program output
+tasks.json
+
+# Build output
 /build
 
 # Prerequisites

@@ -6,14 +6,14 @@
 
 auto interactive_mode() -> void
 {
-    TaskTracker task_tracker;
+    TaskTracker task_tracker("./tasks.json");
 
     task_tracker.interactive_mode();
 }
 
 auto batch_mode(const std::vector<std::string>& args) -> void
 {
-    TaskTracker task_tracker;
+    TaskTracker task_tracker("./tasks.json");
 
     task_tracker.batch_mode(args);
 }

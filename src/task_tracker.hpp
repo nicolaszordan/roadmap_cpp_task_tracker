@@ -9,6 +9,8 @@
 
 class TaskTracker {
 public:
+                TaskTracker(std::optional<std::filesystem::path> file_storage = std::nullopt);
+
     auto        interactive_mode() -> void;
     auto        batch_mode(const std::vector<std::string>& args) -> void;
 
