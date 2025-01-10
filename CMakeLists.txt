@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-Wall")
 
 set(SOURCES
+    src/task.cpp
     src/task_tracker.cpp
     src/task_storage.cpp
     src/commands.cpp

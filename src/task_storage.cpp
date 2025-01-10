@@ -1,5 +1,103 @@
 #include "task_storage.hpp"
 
+#include <print>
+#include <fstream>
+#include <ranges>
+
+#include <nlohmann/json.hpp>
+
+namespace {
+
+using json = nlohmann::json;
+
+auto tasks_from_json(const json& tasks_json) -> std::unordered_map<TaskID, Task>
+{
+    if (!tasks_json.is_array()) {
+        throw std::runtime_error("invalid tasks json format, expected array.");
+    }
+
+    std::unordered_map<TaskID, Task> tasks;
+
+    for (const auto& task_json : tasks_json) {
+        auto task = task_json.template get<Task>();
+        tasks.emplace(task.id, task);
+    }
+
+    return tasks;
+}
+
+auto tasks_to_json(const std::unordered_map<TaskID, Task>& tasks) -> json
+{
+    json tasks_json = json::array();
+
+    for (const auto& task: tasks | std::views::values) {
+        json task_json = task;
+        tasks_json.push_back(task_json);
+    }
+
+    return tasks_json;
+}
+
+auto get_max_id(const std::unordered_map<TaskID, Task>& tasks) -> TaskID
+{
+    if (tasks.empty()) {
+        return 0;
+    }
+
+    return std::ranges::max(tasks | std::views::keys);
+}
+
+} // anonymous namespace
+
+TaskStorage::TaskStorage(std::optional<std::filesystem::path> file_storage)
+    : file_storage{ file_storage }
+{
+    if (!file_storage) {
+        return;
+    }
+
+    auto file = std::fstream{*file_storage, std::ios::in};
+
+    if (!file.is_open()) {
+        std::println("failed to open file storage. starting with empty tasks.");
+        return;
+    }
+
+    import_tasks_from_stream(file);
+}
+
+auto TaskStorage::export_tasks_to_stream(std::ostream& os) const -> void
+{
+    json tasks_json = tasks_to_json(tasks);
+
+    os << tasks_json.dump(4);
+}
+
+auto TaskStorage::import_tasks_from_stream(std::istream& is) -> void
+{
+    json tasks_json;
+    is >> tasks_json;
+
+    tasks = tasks_from_json(tasks_json);
+
+    next_id = get_max_id(tasks) + 1;
+}
+
+auto TaskStorage::save_tasks() -> void
+{
+    if (!file_storage) {
+        return;
+    }
+
+    auto file = std::fstream{*file_storage, std::ios::out | std::ios::trunc};
+
+    if (!file.is_open()) {
+        throw std::runtime_error("failed to open file storage.");
+    }
+
+    export_tasks_to_stream(file);
+}
+
 auto TaskStorage::add_task(std::string_view description) -> TaskID
 {
     auto id = next_id++;
@@ -254,6 +352,71 @@ TEST_CASE("TaskStorage can provide a view with all tasks in the Done status", "[
     REQUIRE(all_tasks_done_task_1 != all_tasks_done.end());
     REQUIRE(all_tasks_done_task_1->description == "Test task 1");
     REQUIRE(all_tasks_done_task_2 == all_tasks_done.end());
+}
+
+TEST_CASE("TaskStorage can export tasks into valid json", "[task_storage]")
+{
+    TaskStorage task_storage;
+
+    auto task_id_1 = task_storage.add_task("Test task 1");
+    auto task_id_2 = task_storage.add_task("Test task 2");
+
+    task_storage.update_task(task_id_1, TaskUpdate{ status: TaskStatus::Done });
+
+    std::stringstream ss;
+
+    task_storage.export_tasks_to_stream(ss);
+
+    json tasks_json;
+    ss >> tasks_json;
+
+    REQUIRE(tasks_json.is_array());
+    REQUIRE(tasks_json.size() == 2);
+
+    auto task_1_json = *std::find_if(tasks_json.begin(), tasks_json.end(), [task_id_1](const json& task_json) {
+        return task_json["id"] == task_id_1;
+    });
+    auto task_2_json = *std::find_if(tasks_json.begin(), tasks_json.end(), [task_id_2](const json& task_json) {
+        return task_json["id"] == task_id_2;
+    });
+
+    REQUIRE(task_1_json["id"] == task_id_1);
+    REQUIRE(task_1_json["status"] == "Done");
+    REQUIRE(task_1_json["description"] == "Test task 1");
+
+    REQUIRE(task_2_json["id"] == task_id_2);
+    REQUIRE(task_2_json["status"] == "Todo");
+    REQUIRE(task_2_json["description"] == "Test task 2");
+}
+
+TEST_CASE("TaskStorage can export and import tasks", "[task_storage]")
+{
+    TaskStorage task_storage;
+
+    auto task_id_1 = task_storage.add_task("Test task 1");
+    task_storage.add_task("Test task 2");
+
+    task_storage.update_task(task_id_1, TaskUpdate{ status: TaskStatus::Done });
+
+    std::stringstream ss;
+
+    task_storage.export_tasks_to_stream(ss);
+
+    TaskStorage task_storage_imported;
+
+    task_storage_imported.import_tasks_from_stream(ss);
+
+    auto& all_tasks = task_storage.get_tasks_map();
+    auto& all_tasks_imported = task_storage_imported.get_tasks_map();
+
+    REQUIRE(all_tasks.size() == all_tasks_imported.size());
+
+    for (const auto& [id, task] : all_tasks) {
+        auto it = all_tasks_imported.find(id);
+
+        REQUIRE(it != all_tasks_imported.end());
+        REQUIRE(it->second == task);
+    }
 }
 
 } // namespace tests

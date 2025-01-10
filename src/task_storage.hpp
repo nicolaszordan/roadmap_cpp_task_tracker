@@ -5,15 +5,22 @@
 #include <optional>
 #include <functional>
 #include <ranges>
+#include <filesystem>
+#include <optional>
 
 #include "task.hpp"
 
 class TaskStorage {
 public:
-            TaskStorage() = default;
+            TaskStorage(std::optional<std::filesystem::path> file_storage = std::nullopt);
             ~TaskStorage() = default;
 
 public:
+    auto    export_tasks_to_stream(std::ostream& os) const -> void;
+    auto    import_tasks_from_stream(std::istream& is) -> void;
+
+    auto    save_tasks() -> void;
+
     auto    add_task(std::string_view description) -> TaskID;
     auto    get_task(TaskID id) const -> std::optional<std::reference_wrapper<const Task>>;
     auto    update_task(TaskID id, const TaskUpdate& update) -> std::optional<std::reference_wrapper<const Task>>;
@@ -47,4 +54,5 @@ public:
 private:
     TaskID                              next_id = {};
     std::unordered_map<TaskID, Task>    tasks;
+    std::optional<std::filesystem::path> file_storage;
 };
