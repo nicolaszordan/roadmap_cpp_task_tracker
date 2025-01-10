@@ -72,14 +72,14 @@ TEST_CASE("command_type_from_string returns the correct command type", "[command
 
     SECTION("MarkTaskDone")
     {
-        auto result = cmds::command_type_from_string("mark-done");
+        auto result = cmds::command_type_from_string("mark-task-done");
         REQUIRE(result);
         REQUIRE(*result == cmds::CommandType::MarkTaskDone);
     }
 
     SECTION("MarkTaskInProgress")
     {
-        auto result = cmds::command_type_from_string("mark-in-progress");
+        auto result = cmds::command_type_from_string("mark-task-in-progress");
         REQUIRE(result);
         REQUIRE(*result == cmds::CommandType::MarkTaskInProgress);
     }
