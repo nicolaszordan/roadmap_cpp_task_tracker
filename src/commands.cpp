@@ -18,6 +18,8 @@ auto cmds::command_type_from_string(std::string_view str) -> std::optional<Comma
         return CommandType::MarkTaskInProgress;
     } else if (str == UpdateTask::get_name()) {
         return CommandType::UpdateTask;
+    } else if (str == Help::get_name()) {
+        return CommandType::Help;
     }
 
     return std::nullopt;
@@ -26,6 +28,7 @@ auto cmds::command_type_from_string(std::string_view str) -> std::optional<Comma
 auto cmds::print_command_types() -> void
 {
     std::println("Commands:");
+    std::println("  {} - {}", Help::get_name(), Help::get_description());
     std::println("  {} - {}", Echo::get_name(), Echo::get_description());
     std::println("  {} - {}", ListTasks::get_name(), ListTasks::get_description());
     std::println("  {} - {}", AddTask::get_name(), AddTask::get_description());

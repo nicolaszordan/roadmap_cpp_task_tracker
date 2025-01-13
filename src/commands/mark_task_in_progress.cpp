@@ -70,7 +70,7 @@ auto MarkTaskInProgress::usage() const -> std::string_view
 
 auto MarkTaskInProgress::get_usage() -> std::string_view
 {
-    return "mark-in-progress task_id";
+    return "mark-in-progress [task_id]";
 }
 
 } // namespace cmds

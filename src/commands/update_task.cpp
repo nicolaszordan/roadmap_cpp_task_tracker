@@ -71,7 +71,7 @@ auto UpdateTask::usage() const -> std::string_view
 
 auto UpdateTask::get_usage() -> std::string_view
 {
-    return "update TaskID new_description";
+    return "update [task_id] [new_description]";
 }
 
 } // namespace cmds

@@ -63,7 +63,7 @@ auto DeleteTask::usage() const -> std::string_view
 
 auto DeleteTask::get_usage() -> std::string_view
 {
-    return "delete task_id";
+    return "delete [task_id]";
 }
 
 } // namespace cmds

@@ -5,6 +5,7 @@
 
 #include "commands/command.hpp"
 #include "commands/echo.hpp"
+#include "commands/help.hpp"
 #include "commands/list_tasks.hpp"
 #include "commands/add_task.hpp"
 #include "commands/delete_task.hpp"
@@ -16,6 +17,7 @@ namespace cmds {
 
 enum class CommandType {
     Echo,
+    Help,
     ListTasks,
     AddTask,
     DeleteTask,

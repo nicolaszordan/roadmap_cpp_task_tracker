@@ -15,6 +15,7 @@ set(SOURCES
     src/task_storage.cpp
     src/commands.cpp
     src/commands/echo.cpp
+    src/commands/help.cpp
     src/commands/list_tasks.cpp
     src/commands/add_task.cpp
     src/commands/delete_task.cpp
