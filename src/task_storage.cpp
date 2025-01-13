@@ -101,11 +101,14 @@ auto TaskStorage::save_tasks() -> void
 auto TaskStorage::add_task(std::string_view description) -> TaskID
 {
     auto id = next_id++;
+    auto create_time = std::chrono::system_clock::now();
 
     tasks.emplace(id, Task{
         id: id, 
         status: TaskStatus::Todo,
         description: std::string{description}, 
+        created_at: create_time,
+        updated_at: create_time,
     });
 
     return id;
@@ -130,15 +133,19 @@ auto TaskStorage::update_task(TaskID id, const TaskUpdate& update) -> std::optio
         return std::nullopt;
     }
 
+    auto& task = it->second;
+
     if (update.description) {
-        it->second.description = *update.description;
+        task.description = *update.description;
     }
 
     if (update.status) {
-        it->second.status = *update.status;
+        task.status = *update.status;
     }
 
-    return it->second;
+    task.updated_at = std::chrono::system_clock::now();
+
+    return task;
 }
 
 auto TaskStorage::delete_task(TaskID id) -> void
@@ -156,6 +163,7 @@ auto TaskStorage::get_tasks_map() const -> const std::unordered_map<TaskID, Task
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 #include <algorithm>
+#include <thread> // std::this_thread::sleep_for
 namespace tests {
 
 TEST_CASE("TaskStorage can add multiple tasks with unique ids", "[task_storage]")
@@ -246,6 +254,25 @@ TEST_CASE("TaskStorage can update a task's field independently", "[task_storage]
     REQUIRE(result);
     REQUIRE(result->get().description == "Updated task");
     REQUIRE(result->get().status == TaskStatus::Done);
+}
+
+TEST_CASE("TaskStorage's update changes the updated_at field", "[task_storage]")
+{
+    TaskStorage task_storage;
+
+    auto task_id = task_storage.add_task("Test task");
+
+    auto task = task_storage.get_task(task_id)->get();
+
+    auto updated_at = task.updated_at;
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+    task_storage.update_task(task_id, TaskUpdate{ description: "Updated task" });
+
+    task = task_storage.get_task(task_id)->get();
+
+    REQUIRE(task.updated_at > updated_at);
 }
 
 // VIEWS

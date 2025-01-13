@@ -1,5 +1,19 @@
 #include "task.hpp"
 
+#include <sstream>
+
+namespace {
+
+auto parse_time(const std::string& fmt, const std::string& time_str) -> std::chrono::system_clock::time_point
+{
+    auto is = std::istringstream{time_str};
+    std::chrono::system_clock::time_point tp;
+    is >> std::chrono::parse(fmt, tp);
+    return tp;
+}
+
+} // anonymous namespace
+
 auto to_json(json& j, const TaskStatus& status) -> void
 {
     switch (status) {
@@ -40,10 +54,15 @@ auto from_json(const json& j, TaskStatus& status) -> void
 
 auto to_json(json& j, const Task& task) -> void
 {
+    auto created_at = std::format("{:%Y-%m-%d %H:%M:%S}", task.created_at);
+    auto updated_at = std::format("{:%Y-%m-%d %H:%M:%S}", task.updated_at);
+
     j = json{
         {"id", task.id},
         {"status", task.status},
         {"description", task.description},
+        {"created_at", created_at},
+        {"updated_at", updated_at},
     };
 }
 
@@ -52,9 +71,41 @@ auto from_json(const json& j, Task& task) -> void
     j.at("id").get_to(task.id);
     j.at("status").get_to(task.status);
     j.at("description").get_to(task.description);
+    auto created_at = j.at("created_at").get<std::string>();
+    task.created_at = parse_time("%Y-%m-%d %H:%M:%S", created_at);
+    auto updated_at = j.at("updated_at").get<std::string>();
+    task.updated_at = parse_time("%Y-%m-%d %H:%M:%S", updated_at);
 }
 
 auto operator==(const Task& lhs, const Task& rhs) -> bool
 {
-    return lhs.id == rhs.id && lhs.status == rhs.status && lhs.description == rhs.description;
+    return lhs.id == rhs.id 
+        && lhs.status == rhs.status 
+        && lhs.description == rhs.description
+        && lhs.created_at == rhs.created_at
+        && lhs.updated_at == rhs.updated_at;
+}
+
+auto operator<<(std::ostream &os, const TaskStatus &status) -> std::ostream &
+{
+    switch (status) {
+    case TaskStatus::Todo:
+        return os << "Todo";
+    case TaskStatus::Done:
+        return os << "Done";
+    case TaskStatus::InProgress:
+        return os << "InProgress";
+    default:
+        return os << "Unknown";
+    }
+}
+
+auto operator<<(std::ostream &os, const Task &task) -> std::ostream &
+{
+    return os << "Task(id:" << task.id 
+        << ", status:" << task.status 
+        << ", description:" << task.description 
+        << ", created_at:" << task.created_at
+        << ", updated_at:" << task.updated_at
+        << ")";
 }
