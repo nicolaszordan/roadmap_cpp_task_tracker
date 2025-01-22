@@ -27,44 +27,4 @@ auto AddTask::run(const std::vector<std::string>& args) -> std::expected<void, C
     return {};
 }
 
-auto AddTask::help() const -> std::string_view
-{
-    return AddTask::get_help();
-}
-
-auto AddTask::get_help() -> std::string_view
-{
-    return "Add a new task.";
-}
-
-auto AddTask::description() const -> std::string_view
-{
-    return AddTask::get_description();
-}
-
-auto AddTask::get_description() -> std::string_view
-{
-    return "Add a new task.";
-}
-
-auto AddTask::name() const -> std::string_view
-{
-    return AddTask::get_name();
-}
-
-auto AddTask::get_name() -> std::string_view
-{
-    return "add";
-}
-
-auto AddTask::usage() const -> std::string_view
-{
-    return AddTask::get_usage();
-}
-
-auto AddTask::get_usage() -> std::string_view
-{
-    return "add [description]";
-}
-
 } // namespace cmds

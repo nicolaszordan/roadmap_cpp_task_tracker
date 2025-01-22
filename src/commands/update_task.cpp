@@ -34,44 +34,4 @@ auto UpdateTask::run(const std::vector<std::string>& args) -> std::expected<void
     return {};
 }
 
-auto UpdateTask::help() const -> std::string_view
-{
-    return UpdateTask::get_help();
-}
-
-auto UpdateTask::get_help() -> std::string_view
-{
-    return "UpdateTask all tasks or tasks with a specific status.";
-}
-
-auto UpdateTask::description() const -> std::string_view
-{
-    return UpdateTask::get_description();
-}
-
-auto UpdateTask::get_description() -> std::string_view
-{
-    return "UpdateTask all tasks or tasks with a specific status.";
-}
-
-auto UpdateTask::name() const -> std::string_view
-{
-    return UpdateTask::get_name();
-}
-
-auto UpdateTask::get_name() -> std::string_view
-{
-    return "update";
-}
-
-auto UpdateTask::usage() const -> std::string_view
-{
-    return UpdateTask::get_usage();
-}
-
-auto UpdateTask::get_usage() -> std::string_view
-{
-    return "update [task_id] [new_description]";
-}
-
 } // namespace cmds

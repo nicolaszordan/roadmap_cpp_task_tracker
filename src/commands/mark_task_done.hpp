@@ -6,23 +6,36 @@ class TaskStorage;
 
 namespace cmds {
 
-class MarkTaskDone : public Command {
+class MarkTaskDone : public CommandCRTP<MarkTaskDone> {
 public:
-                MarkTaskDone(TaskStorage& task_storage);
+                            MarkTaskDone(TaskStorage& task_storage);
 
-    auto        run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
+    auto                    run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
 
-    auto        help() const -> std::string_view override;
-    static auto get_help() -> std::string_view;
+    constexpr static auto   get_help() -> std::string_view
+    {
+        return "Mark a task as Done.";
+    }
 
-    auto        description() const -> std::string_view override;
-    static auto get_description() -> std::string_view;
+    constexpr static auto   get_description() -> std::string_view
+    {
+        return "Mark a task as Done.";
+    }
 
-    auto        name() const -> std::string_view override;
-    static auto get_name() -> std::string_view;
+    constexpr static auto   get_name() -> std::string_view
+    {
+        return "mark-done";
+    }
 
-    auto        usage() const -> std::string_view override;
-    static auto get_usage() -> std::string_view;
+    constexpr static auto   get_usage() -> std::string_view
+    {
+        return "mark-done [task_id]";
+    }
+
+    constexpr static auto   get_type() -> CommandType
+    {
+        return CommandType::MarkTaskDone;
+    }
 
 private:
     TaskStorage& task_storage;

@@ -6,23 +6,36 @@ class TaskStorage;
 
 namespace cmds {
 
-class UpdateTask : public Command {
+class UpdateTask : public CommandCRTP<UpdateTask> {
 public:
-                UpdateTask(TaskStorage& task_storage);
+                            UpdateTask(TaskStorage& task_storage);
 
-    auto        run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
+    auto                    run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
 
-    auto        help() const -> std::string_view override;
-    static auto get_help() -> std::string_view;
+    constexpr static auto   get_help() -> std::string_view
+    {
+        return "Update a task's description.";
+    }
 
-    auto        description() const -> std::string_view override;
-    static auto get_description() -> std::string_view;
+    constexpr static auto   get_description() -> std::string_view
+    {
+        return "Update a task's description.";
+    }
 
-    auto        name() const -> std::string_view override;
-    static auto get_name() -> std::string_view;
+    constexpr static auto   get_name() -> std::string_view
+    {
+        return "update";
+    }
 
-    auto        usage() const -> std::string_view override;
-    static auto get_usage() -> std::string_view;
+    constexpr static auto   get_usage() -> std::string_view
+    {
+        return "update [task_id] [new_description]";
+    }
+
+    constexpr static auto   get_type() -> CommandType
+    {
+        return CommandType::UpdateTask;
+    }
 
 private:
     TaskStorage& task_storage;

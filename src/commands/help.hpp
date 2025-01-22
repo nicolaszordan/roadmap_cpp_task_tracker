@@ -4,21 +4,34 @@
 
 namespace cmds {
 
-class Help : public Command {
+class Help : public CommandCRTP<Help> {
 public:
-    auto        run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
+    auto                    run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
 
-    auto        help() const -> std::string_view override;
-    static auto get_help() -> std::string_view;
+    constexpr static auto   get_help() -> std::string_view
+    {
+        return "Provides help and informations for commands.";
+    }
 
-    auto        description() const -> std::string_view override;
-    static auto get_description() -> std::string_view;
+    constexpr static auto   get_description() -> std::string_view
+    {
+        return "Provides help and informations for commands.";
+    }
 
-    auto        name() const -> std::string_view override;
-    static auto get_name() -> std::string_view;
+    constexpr static auto   get_name() -> std::string_view
+    {
+        return "help";
+    }
 
-    auto        usage() const -> std::string_view override;
-    static auto get_usage() -> std::string_view;
+    constexpr static auto   get_usage() -> std::string_view
+    {
+        return "help [command]";
+    }
+
+    constexpr static auto   get_type() -> CommandType
+    {
+        return CommandType::Help;
+    }
 };
 
 } // namespace cmds

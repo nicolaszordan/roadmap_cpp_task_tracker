@@ -45,44 +45,4 @@ auto ListTasks::run(const std::vector<std::string>& args) -> std::expected<void,
     return {};
 }
 
-auto ListTasks::help() const -> std::string_view
-{
-    return ListTasks::get_help();
-}
-
-auto ListTasks::get_help() -> std::string_view
-{
-    return "ListTasks all tasks or tasks with a specific status.";
-}
-
-auto ListTasks::description() const -> std::string_view
-{
-    return ListTasks::get_description();
-}
-
-auto ListTasks::get_description() -> std::string_view
-{
-    return "ListTasks all tasks or tasks with a specific status.";
-}
-
-auto ListTasks::name() const -> std::string_view
-{
-    return ListTasks::get_name();
-}
-
-auto ListTasks::get_name() -> std::string_view
-{
-    return "list";
-}
-
-auto ListTasks::usage() const -> std::string_view
-{
-    return ListTasks::get_usage();
-}
-
-auto ListTasks::get_usage() -> std::string_view
-{
-    return "list [done|todo|in-progress]";
-}
-
 } // namespace cmds

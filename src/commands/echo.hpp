@@ -4,21 +4,34 @@
 
 namespace cmds {
 
-class Echo : public Command {
+class Echo : public CommandCRTP<Echo> {
 public:
-    auto        run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
+    auto                    run(const std::vector<std::string>& args) -> std::expected<void, CommandError> override;
 
-    auto        help() const -> std::string_view override;
-    static auto get_help() -> std::string_view;
+    constexpr static auto   get_help() -> std::string_view
+    {
+        return "Prints the arguments to the screen.";
+    }
 
-    auto        description() const -> std::string_view override;
-    static auto get_description() -> std::string_view;
+    constexpr static auto   get_description() -> std::string_view
+    {
+        return "Prints the arguments to the screen.";
+    }
 
-    auto        name() const -> std::string_view override;
-    static auto get_name() -> std::string_view;
+    constexpr static auto   get_name() -> std::string_view
+    {
+        return "echo";
+    }
 
-    auto        usage() const -> std::string_view override;
-    static auto get_usage() -> std::string_view;
+    constexpr static auto   get_usage() -> std::string_view
+    {
+        return "echo [args..]";
+    }
+
+    constexpr static auto   get_type() -> CommandType
+    {
+        return CommandType::Echo;
+    }
 };
 
 } // namespace cmds

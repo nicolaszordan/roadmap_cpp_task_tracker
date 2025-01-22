@@ -33,44 +33,4 @@ auto MarkTaskDone::run(const std::vector<std::string>& args) -> std::expected<vo
     return {};
 }
 
-auto MarkTaskDone::help() const -> std::string_view
-{
-    return MarkTaskDone::get_help();
-}
-
-auto MarkTaskDone::get_help() -> std::string_view
-{
-    return "Mark a task as Done.";
-}
-
-auto MarkTaskDone::description() const -> std::string_view
-{
-    return MarkTaskDone::get_description();
-}
-
-auto MarkTaskDone::get_description() -> std::string_view
-{
-    return "Mark a task as Done.";
-}
-
-auto MarkTaskDone::name() const -> std::string_view
-{
-    return MarkTaskDone::get_name();
-}
-
-auto MarkTaskDone::get_name() -> std::string_view
-{
-    return "mark-task-done";
-}
-
-auto MarkTaskDone::usage() const -> std::string_view
-{
-    return MarkTaskDone::get_usage();
-}
-
-auto MarkTaskDone::get_usage() -> std::string_view
-{
-    return "mark-task-done [task_id]";
-}
-
 } // namespace cmds

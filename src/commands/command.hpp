@@ -8,6 +8,18 @@
 
 namespace cmds {
 
+// NOTE: this is looking more and more like a manual typeid
+enum class CommandType {
+    Help,
+    Echo,
+    ListTasks,
+    AddTask,
+    DeleteTask,
+    UpdateTask,
+    MarkTaskDone,
+    MarkTaskInProgress,
+};
+
 enum class CommandError {
     UnknownCommand,
     InvalidArguments,
@@ -32,6 +44,63 @@ public:
 
     // Provide a usage message for the command.
     virtual auto    usage() const -> std::string_view = 0;
+
+    // Provide the command type.
+    virtual auto    type() const -> CommandType = 0;
+};
+
+template<typename CommandT>
+class CommandCRTP : public Command {
+public:
+    auto    help() const -> std::string_view override
+    {
+        return CommandT::get_help();
+    }
+
+    constexpr static auto   get_help() -> std::string_view
+    {
+        return CommandT::get_help();
+    }
+
+    auto    description() const -> std::string_view override
+    {
+        return CommandT::get_description();
+    }
+
+    constexpr static auto   get_description() -> std::string_view
+    {
+        return CommandT::get_description();
+    }
+
+    auto    name() const -> std::string_view override
+    {
+        return CommandT::get_name();
+    }
+
+    constexpr static auto   get_name() -> std::string_view
+    {
+        return CommandT::get_name();
+    }
+
+    auto    usage() const -> std::string_view override
+    {
+        return CommandT::get_usage();
+    }
+
+    constexpr static auto   get_usage() -> std::string_view
+    {
+        return CommandT::get_usage();
+    }
+
+    auto    type() const -> CommandType override
+    {
+        return CommandT::get_type();
+    }
+
+    constexpr static auto   get_type() -> CommandType
+    {
+        return CommandT::get_type();
+    }
 };
     
 } // namespace cmds

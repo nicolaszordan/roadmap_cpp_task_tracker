@@ -33,44 +33,4 @@ auto MarkTaskInProgress::run(const std::vector<std::string>& args) -> std::expec
     return {};
 }
 
-auto MarkTaskInProgress::help() const -> std::string_view
-{
-    return MarkTaskInProgress::get_help();
-}
-
-auto MarkTaskInProgress::get_help() -> std::string_view
-{
-    return "Mark a task as InProgress.";
-}
-
-auto MarkTaskInProgress::description() const -> std::string_view
-{
-    return MarkTaskInProgress::get_description();
-}
-
-auto MarkTaskInProgress::get_description() -> std::string_view
-{
-    return "Mark a task as InProgress.";
-}
-
-auto MarkTaskInProgress::name() const -> std::string_view
-{
-    return MarkTaskInProgress::get_name();
-}
-
-auto MarkTaskInProgress::get_name() -> std::string_view
-{
-    return "mark-task-in-progress";
-}
-
-auto MarkTaskInProgress::usage() const -> std::string_view
-{
-    return MarkTaskInProgress::get_usage();
-}
-
-auto MarkTaskInProgress::get_usage() -> std::string_view
-{
-    return "mark-in-progress [task_id]";
-}
-
 } // namespace cmds
