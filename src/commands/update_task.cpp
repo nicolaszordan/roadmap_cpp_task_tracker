@@ -25,7 +25,7 @@ auto UpdateTask::run(const std::vector<std::string>& args) -> std::expected<void
 
     auto updated_task = task_storage.update_task(task_id, task_update);
 
-    if (!updated_task) {
+    if (!updated_task.has_value()) {
         return std::unexpected(CommandError::InvalidTaskID);
     }
 

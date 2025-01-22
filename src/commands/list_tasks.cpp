@@ -4,6 +4,18 @@
 
 #include "../task_storage.hpp"
 
+namespace {
+
+template<typename ViewT>
+void print_tasks_in_view(ViewT&& task_view)
+{
+    for (const auto& task: task_view) {
+        std::println("{}", task);
+    }
+}
+
+} // anonymous namespace
+
 namespace cmds {
 
 ListTasks::ListTasks(TaskStorage& task_storage)
@@ -13,30 +25,27 @@ ListTasks::ListTasks(TaskStorage& task_storage)
 
 auto ListTasks::run(const std::vector<std::string>& args) -> std::expected<void, CommandError>
 {
+    // list all tasks and return
     if (args.size() == 1) {
-        for (const auto& task: task_storage.view_all_tasks()) {
-            std::println("{}", task);
-        }
+        print_tasks_in_view(task_storage.view_all_tasks());
+        return {};
+    } 
+    
+    // invalid number of arguments
+    if (args.size() != 2) {
+        return std::unexpected(CommandError::InvalidArguments);
+    }
 
-    } else if (args.size() == 2) {
-        if (args[1] == "done") {
-            for (const auto& task: task_storage.view_all_tasks_done()) {
-                std::println("{}", task);
-            }
+    const auto& filter = args[1];
 
-        } else if (args[1] == "todo") {
-            for (const auto& task: task_storage.view_all_tasks_todo()) {
-                std::println("{}", task);
-            }
+    if (filter == "done") {
+        print_tasks_in_view(task_storage.view_all_tasks_done());
 
-        } else if (args[1] == "in-progress") {
-            for (const auto& task: task_storage.view_all_tasks_in_progress()) {
-                std::println("{}", task);
-            }
+    } else if (filter == "todo") {
+        print_tasks_in_view(task_storage.view_all_tasks_todo());
 
-        } else {
-            return std::unexpected(CommandError::InvalidArguments);
-        }
+    } else if (filter == "in-progress") {
+        print_tasks_in_view(task_storage.view_all_tasks_in_progress());
 
     } else {
         return std::unexpected(CommandError::InvalidArguments);
