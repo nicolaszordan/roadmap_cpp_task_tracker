@@ -1,6 +1,9 @@
 #include "task.hpp"
 
+#include <string_view>
 #include <sstream>
+
+#define TIME_FORMAT "%Y-%m-%d %H:%M:%S"
 
 namespace {
 
@@ -54,8 +57,8 @@ auto from_json(const json& j, TaskStatus& status) -> void
 
 auto to_json(json& j, const Task& task) -> void
 {
-    auto created_at = std::format("{:%Y-%m-%d %H:%M:%S}", task.created_at);
-    auto updated_at = std::format("{:%Y-%m-%d %H:%M:%S}", task.updated_at);
+    auto created_at = std::format("{:" TIME_FORMAT "}", task.created_at);
+    auto updated_at = std::format("{:" TIME_FORMAT "}", task.updated_at);
 
     j = json{
         {"id", task.id},
@@ -71,10 +74,12 @@ auto from_json(const json& j, Task& task) -> void
     j.at("id").get_to(task.id);
     j.at("status").get_to(task.status);
     j.at("description").get_to(task.description);
+
     auto created_at = j.at("created_at").get<std::string>();
-    task.created_at = parse_time("%Y-%m-%d %H:%M:%S", created_at);
+    task.created_at = parse_time(TIME_FORMAT, created_at);
+
     auto updated_at = j.at("updated_at").get<std::string>();
-    task.updated_at = parse_time("%Y-%m-%d %H:%M:%S", updated_at);
+    task.updated_at = parse_time(TIME_FORMAT, updated_at);
 }
 
 auto operator==(const Task& lhs, const Task& rhs) -> bool
